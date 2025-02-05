@@ -1,3 +1,4 @@
+using App.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.API.Controllers
@@ -19,8 +20,9 @@ namespace App.API.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> Get(IProductService productService)
         {
+            var products=productService.GetTopPriceProductAsync(3).Result;
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
