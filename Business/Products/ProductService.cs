@@ -2,6 +2,7 @@
 using App.Repositories;
 using App.Repositories.Products;
 using Azure.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,15 @@ namespace App.Services.Products
                 Data = productAsDto,
             };
         }
-        public async Task<ServiceResult<ProductDto>> GetProductByIdAsync(int id)
+        public async Task<ServiceResult<List<ProductDto>>> GetAllListAsync()
+        {
+            var products= await productRepository.GetAll().ToListAsync();
+            var productAsDto = products.Select(p=> new ProductDto(p.Id,p.Name,p.Price, p.Stock)).ToList();
+
+            return ServiceResult<List<ProductDto>>.Success(productAsDto);
+
+        }
+        public async Task<ServiceResult<ProductDto?>> GetByIdAsync(int id)
         {
             var product = await productRepository.GetByIdAsync(id);
 
@@ -36,9 +45,9 @@ namespace App.Services.Products
                 ServiceResult<Product>.Fail("Product not found", HttpStatusCode.NotFound);
             }
             var productAsDto = new ProductDto(product!.Id, product.Name, product.Price, product.Stock);
-            return ServiceResult<ProductDto>.Success(productAsDto!);
+            return ServiceResult<ProductDto>.Success(productAsDto)!;
         }
-        public async Task<ServiceResult<CreateProductsResponse>> CreateProductAsync(CreateProductsRequest request)
+        public async Task<ServiceResult<CreateProductsResponse>> CreateAsync(CreateProductsRequest request)
         {
             var product = new Product()
             {
@@ -51,7 +60,7 @@ namespace App.Services.Products
             await unitOfWork.SaveChangesAsync();
             return ServiceResult<CreateProductsResponse>.Success(new CreateProductsResponse(product.Id));
         }
-        public async Task<ServiceResult> UpdateProductAsync(int id, UpdateProductsRequest request)
+        public async Task<ServiceResult> UpdateAsync(int id, UpdateProductsRequest request)
         {
             var product = await productRepository.GetByIdAsync(id);
 
@@ -71,7 +80,7 @@ namespace App.Services.Products
 
             return ServiceResult.Success();
         }
-        public async Task<ServiceResult> DeleteProductAsync(int id)
+        public async Task<ServiceResult> DeleteAsync(int id)
         {
             var product = await productRepository.GetByIdAsync(id);
             if (product is null)
