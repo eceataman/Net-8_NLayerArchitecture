@@ -14,8 +14,14 @@ namespace App.API.Controllers
         {
             if (result.Status == HttpStatusCode.NoContent)
             {
+                // return NoContent();
                 return new ObjectResult(null) { StatusCode = result.Status.GetHashCode() };
                 //her bir response bodysi dolacak diye bir şey yok örneğin 404 ise oradan anlaacak bad request diye
+            }
+            if (result.Status == HttpStatusCode.Created)
+            {
+                return Created(result.UrlAsCreated, result.Data);
+                //resulttan url geliyor
             }
             return new ObjectResult(result) { StatusCode = result.Status.GetHashCode() };
         }

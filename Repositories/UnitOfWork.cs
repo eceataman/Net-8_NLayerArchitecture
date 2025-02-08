@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using App.Repositories;
 
-namespace App.Repositories
+public class UnitOfWork : IUnitOfWork
 {
-    public class UnitOfWork(AppDbContext context) : IUnitOfWork
+    private readonly AppDbContext _context;
+
+    public UnitOfWork(AppDbContext context)
     {
-        public Task<int> SaveChangesAsync()=> context.SaveChangesAsync();
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    public async Task<int> SaveChangesAsync()
+    {
+        return await _context.SaveChangesAsync();
     }
 }

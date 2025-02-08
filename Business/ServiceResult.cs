@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace App.Services
@@ -16,9 +17,16 @@ namespace App.Services
         //{
         //    return ErrorMessage == null || ErrorMessage.Count == 0;
         //}
+        //[JsonIgnore], JSON serileştirme (serialization) sırasında belirli bir property'nin JSON çıktısına dahil edilmemesini sağlar.örneğin issuccess false, isfail true gibi mesela product not found hatası verdi
+
+
+        [JsonIgnore]
         public bool IsSuccess => ErrorMessage == null || ErrorMessage.Count == 0;
+        [JsonIgnore]
         public bool isFail => !IsSuccess;
+        [JsonIgnore]
         public HttpStatusCode Status { get; set; }
+        [JsonIgnore] public string? UrlAsCreated { get; set; }
         public static ServiceResult<T> Fail(List<string>? errorMessage, HttpStatusCode status = HttpStatusCode.BadRequest)
         {
             return new ServiceResult<T>
@@ -35,6 +43,15 @@ namespace App.Services
                 Status = status
             };
         }
+        public static ServiceResult<T> SuccessAsCreated(T data, string urlAsCreated)
+        {
+            return new ServiceResult<T>
+            {
+                Data= data,
+                Status= HttpStatusCode.Created,
+                UrlAsCreated = urlAsCreated
+            };
+        }
         public static ServiceResult<T> Fail(string errorMessage, HttpStatusCode status = HttpStatusCode.BadRequest)
         {
             return new ServiceResult<T>
@@ -49,13 +66,16 @@ namespace App.Services
     {
     public List<string>? ErrorMessage { get; set; }
 
-    //public bool IsSuccess()
-    //{
-    //    return ErrorMessage == null || ErrorMessage.Count == 0;
-    //}
+        //public bool IsSuccess()
+        //{
+        //    return ErrorMessage == null || ErrorMessage.Count == 0;
+        //}
+   [JsonIgnore]
     public bool IsSuccess => ErrorMessage == null || ErrorMessage.Count == 0;
-    public bool isFail => !IsSuccess;
-    public HttpStatusCode Status { get; set; }
+        [JsonIgnore]
+        public bool isFail => !IsSuccess;
+        [JsonIgnore]
+        public HttpStatusCode Status { get; set; }
     public static ServiceResult Fail(List<string> errorMessage, HttpStatusCode status = HttpStatusCode.BadRequest)
     {
         return new ServiceResult

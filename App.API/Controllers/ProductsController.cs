@@ -16,7 +16,14 @@ namespace App.API.Controllers
             return CreateActionResult(await productService.GetAllListAsync());
 
         }
-        [HttpGet]
+        [HttpGet("{pageNumber}/{pageSize}")]
+        public async Task<IActionResult> GetPagedAll(int pageNumber,int pageSize)
+        {
+
+            return CreateActionResult(await productService.GetPagedAllListAsync(pageNumber,pageSize));
+
+        }
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             //var serviceResult = await productService.GetByIdAsync(id);
@@ -30,12 +37,12 @@ namespace App.API.Controllers
         {
             return CreateActionResult(await productService.CreateAsync(request));
         }
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id,UpdateProductsRequest request)
         {
             return CreateActionResult(await productService.UpdateAsync(id, request));
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             return CreateActionResult(await productService.DeleteAsync(id));
