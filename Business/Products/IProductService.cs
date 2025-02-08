@@ -14,6 +14,7 @@ namespace App.Services.Products
         Task<ServiceResult<List<ProductDto>>> GetPagedAllListAsync(int pageNumber, int pageSize);
         Task<ServiceResult<CreateProductsResponse>> CreateAsync(CreateProductsRequest request);
         Task<ServiceResult> UpdateAsync(int id, UpdateProductsRequest request);
+        Task<ServiceResult> UpdateProductStockAsync(UpdateProductStockRequest request);
         Task<ServiceResult> DeleteAsync(int id);
     }
 }

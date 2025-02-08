@@ -16,14 +16,19 @@ namespace App.API.Controllers
             return CreateActionResult(await productService.GetAllListAsync());
 
         }
-        [HttpGet("{pageNumber}/{pageSize}")]
+        // route constraint türünün int oldgunu belirtiyoruz.Route Constraint, ASP.NET Core'da URL parametrelerinin belirli kurallara uymasını sağlayan bir mekanizmadır.
+       // Bu kısıtlamalar, doğru türde ve formatta veri geldiğinden emin olmak için kullanılır./products/5 → Geçerli (Çünkü 5 bir integer'dır.)
+      // /products/apple → Geçersiz(Çünkü apple bir string'dir ve sayı bekleniyor.)
+
+
+       [HttpGet("{pageNumber:int}/{pageSize:int}")]
         public async Task<IActionResult> GetPagedAll(int pageNumber,int pageSize)
         {
 
             return CreateActionResult(await productService.GetPagedAllListAsync(pageNumber,pageSize));
 
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             //var serviceResult = await productService.GetByIdAsync(id);
@@ -37,12 +42,21 @@ namespace App.API.Controllers
         {
             return CreateActionResult(await productService.CreateAsync(request));
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id,UpdateProductsRequest request)
         {
             return CreateActionResult(await productService.UpdateAsync(id, request));
         }
-        [HttpDelete("{id}")]
+        //PATCH, bir kaynağın tamamını değiştirmek yerine, yalnızca belirli alanlarını güncellemek için kullanılır.
+
+        //PATCH = KISMİ GÜNCELLEME
+        //     PUT = TAM GÜNCELLEME. Aynısını stock update i için putta da yapabiliriz sadece daha detaylı bir şekilde isim verilmeli. Updatestock vb. gibi
+        [HttpPatch("stock")]
+        public async Task<IActionResult> UpdateProductStock(UpdateProductStockRequest request)
+        {
+            return CreateActionResult(await productService.UpdateProductStockAsync(request));
+        }
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             return CreateActionResult(await productService.DeleteAsync(id));

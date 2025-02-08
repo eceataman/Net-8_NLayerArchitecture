@@ -96,6 +96,19 @@ namespace App.Services.Products
             return ServiceResult.Success(HttpStatusCode.NoContent);
             //204 No Content, istemciye veri döndürülmesi gerekmediğinde veya döndürülecek bir içerik olmadığında kullanılır.
         }
+        public async Task<ServiceResult> UpdateProductStockAsync(UpdateProductStockRequest request)
+        {
+            var product=await productRepository.GetByIdAsync(request.productId);
+            if(product is null)
+            {
+                return ServiceResult.Fail("Product doesnt found", HttpStatusCode.NotFound);
+            }
+            //clean codeda bir method 2den fazla değişken içeriyorsa bunu objeyw çevirmeliyiz. bu yüzden de updatestockrequest e çevirdim
+            product.Stock = request.quantity;
+            productRepository.Update(product);
+            await unitOfWork.SaveChangesAsync();
+            return ServiceResult.Success(HttpStatusCode.NoContent);
+        }
         public async Task<ServiceResult> DeleteAsync(int id)
         {
             var product = await productRepository.GetByIdAsync(id);
