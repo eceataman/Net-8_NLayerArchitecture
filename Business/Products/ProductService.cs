@@ -57,8 +57,13 @@ namespace App.Services.Products
         }
         public async Task<ServiceResult<CreateProductsResponse>> CreateAsync(CreateProductsRequest request)
         {
-           
-                var product = new Product()
+            var anyProduct = await productRepository.Where(x => x.Name == request.Name).AnyAsync();
+            if (anyProduct)
+            {
+                //bu asenkron programlama
+                return ServiceResult<CreateProductsResponse>.Fail("Ürün veritabanında bulunmaktadır", HttpStatusCode.BadRequest);
+            }
+            var product = new Product()
                 {
                     Name = request.Name,
                     Stock = request.Stock,

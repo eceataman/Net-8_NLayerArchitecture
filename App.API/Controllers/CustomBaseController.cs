@@ -20,7 +20,7 @@ namespace App.API.Controllers
             }
             if (result.Status == HttpStatusCode.Created)
             {
-                return Created(result.UrlAsCreated, result.Data);
+                return Created(result.UrlAsCreated, result);
                 //resulttan url geliyor
             }
             return new ObjectResult(result) { StatusCode = result.Status.GetHashCode() };
