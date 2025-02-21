@@ -1,6 +1,7 @@
 ﻿
 using App.Repositories;
 using App.Repositories.Products;
+using App.Services.ExceptionHandlers;
 using AutoMapper;
 using Azure.Core;
 using Microsoft.AspNetCore.Builder;
@@ -66,6 +67,7 @@ namespace App.Services.Products
         }
         public async Task<ServiceResult<CreateProductsResponse>> CreateAsync(CreateProductsRequest request)
         {
+            throw new CriticalException("kritik bir seviye hata meydana geldi");
             var anyProduct = await productRepository.Where(x => x.Name == request.Name).AnyAsync();
             if (anyProduct)
             {
