@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.Services.Products.Update;
+using App.Services.Products.UpdateStock;
 
 namespace App.Services.Products
 {

@@ -2,6 +2,8 @@
 using App.Repositories;
 using App.Repositories.Products;
 using App.Services.ExceptionHandlers;
+using App.Services.Products.Update;
+using App.Services.Products.UpdateStock;
 using AutoMapper;
 using Azure.Core;
 using Microsoft.AspNetCore.Builder;
@@ -100,7 +102,13 @@ namespace App.Services.Products
             {
                 return ServiceResult.Fail("Product not found", HttpStatusCode.NotFound);
             }
-
+            var isProductNameExist=await productRepository.Where(x => x.Name==request.Name && x.Id != product.Id) .AnyAsync();
+            //Bu kod, veritabanında aynı isimde ama farklı ID'ye sahip bir ürünün olup olmadığını kontrol ediyor. Yani, güncelleme işlemi yaparken, mevcut ürün dışında aynı isimde başka bir ürün var mı diye bakıyor.
+            if (isProductNameExist)
+            {
+                return ServiceResult.Fail("ürün ismi veritabanında bulunmaktadır",
+                    HttpStatusCode.BadRequest);
+            }
             // Ürün güncelleme
             product.Name = request.Name;
             product.Price = request.Price;
