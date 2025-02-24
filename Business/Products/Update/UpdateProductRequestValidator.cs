@@ -12,7 +12,7 @@ namespace App.Services.Products.Update
     {
         public UpdateProductRequestValidator(IProductRepository productRepository)
         {
-            _productRepository = productRepository;
+           
             RuleFor(x => x.Name)
                     .NotEmpty().WithMessage("ürün ismi gereklidir")
             //.NotNull().WithMessage("ürün ismi gereklidir");

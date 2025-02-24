@@ -13,6 +13,8 @@ namespace App.Services.Mapping
     {
         public MappingProfile() {
         CreateMap<Product,ProductDto>().ReverseMap();
+            
                 }
+
     }
 }
